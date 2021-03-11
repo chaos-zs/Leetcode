@@ -1,0 +1,93 @@
+class Solution {
+public:
+    int cal(char op, int n1, int n2) {
+        switch (op) {
+        case '+':
+            return n1 + n2;
+            break;
+        case '-':
+            return n1 - n2;
+            break;
+        case '*':
+            return n1 * n2;
+            break;
+        case '/':
+            return n1 / n2;
+            break;
+        }
+        return 0;
+    }
+    int calculate(string s) {
+        int ans = 0;
+        int digit = 0;
+        stack<int> st_int;
+        stack<char> st_char;
+        bool flag = false;
+        for (int i = 0; i < s.length(); i++) {
+            digit = 0;
+            while (i < s.length() && s[i] >= '0' && s[i] <= '9') {
+                digit = digit * 10;
+                digit += s[i] - '0';
+                i++;
+                flag = true;
+            }
+            if (flag) {
+                st_int.push(digit);
+                flag = false;
+                i--;
+                continue;
+            }
+            if (s[i] == 32)
+                continue;
+            else if (s[i] == ')') {
+                while (st_char.top() != '(') {
+                    int n1 = st_int.top();
+                    st_int.pop();
+                    int n2 = st_int.top();
+                    st_int.pop();
+                    char c = st_char.top();
+                    st_char.pop();
+                    st_int.push(cal(c, n2, n1));
+                }
+                st_char.pop();
+                continue;
+            }
+            while (!st_char.empty()){
+                if ((st_char.top() == '+' || st_char.top() == '-') && (s[i] == '+' || s[i] == '-' || s[i] == 0)) {
+                    int n1 = st_int.top();
+                    st_int.pop();
+                    int n2 = st_int.top();
+                    st_int.pop();
+                    char c = st_char.top();
+                    st_char.pop();
+                    st_int.push(cal(c, n2, n1));
+                }
+
+                else if ((st_char.top() == '*' || st_char.top() == '/') && (s[i] == '*' || s[i] == '/' || s[i] == '+' || s[i] == '-' || s[i] == 0)) {
+                    int n1 = st_int.top();
+                    st_int.pop();
+                    int n2 = st_int.top();
+                    st_int.pop();
+                    char c = st_char.top();
+                    st_char.pop();
+                    st_int.push(cal(c, n2, n1));
+                }
+                else
+                    break;
+            }
+            st_char.push(s[i]);
+        }
+        while (!st_char.empty()) {
+            int n1 = st_int.top();
+            st_int.pop();
+            int n2 = st_int.top();
+            st_int.pop();
+            char c = st_char.top();
+            st_char.pop();
+            st_int.push(cal(c, n2, n1));
+        }
+        ans = st_int.top();
+        return ans;
+    }
+
+};
