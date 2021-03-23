@@ -1,0 +1,44 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+ //naive 遍历所有子节点
+class Solution {
+public:
+    vector<int> v;
+    int kthLargest(TreeNode* root, int k) {
+        reInorder(root);
+        return v[k-1];
+    }
+
+    void reInorder(TreeNode* root){
+        if(root==NULL)
+            return;
+        reInorder(root->right);
+        v.push_back(root->val);
+        reInorder(root->left);
+    }
+};
+
+//pro 遍历到第k大元素即结束遍历
+class Solution {
+public:
+    vector<int> v;
+    int kthLargest(TreeNode* root, int k) {
+        reInorder(root,k);
+        return v[k-1];
+    }
+
+    void reInorder(TreeNode* root,int k){
+        if(root==NULL||v.size()==k)
+            return;
+        reInorder(root->right,k);
+        v.push_back(root->val);
+        reInorder(root->left,k);
+    }
+};
