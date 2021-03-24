@@ -1,0 +1,69 @@
+class Solution {
+public:
+    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+         vector<int> ret;
+        double r = 0;
+        int i = 0, j = 0;
+        if (nums1.size() == 0)
+            ret = nums2;
+        else if (nums2.size() == 0)
+            ret = nums1;
+        else {
+            while (i < nums1.size()) {
+                while (j < nums2.size()) {
+                    if (nums1[i] < nums2[j]) {
+                        ret.insert(std::end(ret),nums1[i]);
+                        i++;
+                        if (i == nums1.size()) {
+                            while (j < nums2.size()) {
+                                ret.insert(std::end(ret), nums2[j]);
+                                j++;
+                            }
+                            break;
+                        }
+                            
+                    }
+                    else if (nums2[j] < nums1[i]) {
+                        ret.insert(std::end(ret), nums2[j]);
+                        j++;
+                        if (j == nums2.size()) {
+                            while (i < nums1.size()) {
+                                ret.insert(std::end(ret), nums1[i]);
+                                i++;
+                            }
+                            break;
+                        }
+                    }
+                    else {
+                        ret.insert(std::end(ret), nums1[i]);
+                        ret.insert(std::end(ret), nums2[j]);
+                        i++;
+                        j++;
+                         if (i == nums1.size()) {
+                            while (j < nums2.size()) {
+                                ret.insert(std::end(ret), nums2[j]);
+                                j++;
+                            }
+                            break;
+                        }
+                        else if (j == nums2.size()) {
+                            while (i < nums1.size()) {
+                                ret.insert(std::end(ret), nums1[i]);
+                                i++;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        int size = ret.size();
+        if (size % 2 == 0)
+            r = (double) (ret[size / 2] + ret[size / 2 - 1]) / 2.0;
+        else
+            r = (double) ret[(size - 1) / 2];
+        return r;
+
+    }
+};
