@@ -1,0 +1,27 @@
+class Solution {
+public:
+	int minSubArrayLen(int target, vector<int>& nums) {
+		int n = nums.size();
+		int ans = 100000;
+		for (int i = 0; i < n - 1; i++) {   //求得前缀和
+			nums[i + 1] += nums[i];
+		}
+		int j = 0;                      //i,j相当于左右指针，右指针一直右移，找到大于target的位置，左指针也开始向右移动，减少子数组的长度
+		for (int i = 0; i < n; i++) {
+			if (target > nums[i])         //向右遍历寻找大于target的子数组
+				continue;
+			else if (target <= nums[i]) {
+				if (ans > i + 1)
+					ans = i + 1;
+				while (nums[i] - nums[j] >= target) {       //从最左边开始减少寻找长度最小的条件
+					if (ans > i - j)
+						ans = i - j;
+					j++;
+				}
+			}
+		}
+		if (ans == 100000)
+			ans = 0;
+		return ans;
+	}
+};
